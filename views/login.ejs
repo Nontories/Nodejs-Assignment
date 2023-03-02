@@ -9,7 +9,29 @@
 </head>
 <body>
     
-    <%-  include('partial/header') %>
+    <%- include('partial/header', {userId : userId}) %>
+
+    <% if(success_msg != ''){ %>
+      <article class="message is-warning is-block mx-6 is-round">
+        <div class="message-header">
+          <%= success_msg %>
+        </div>
+      </article>
+    <% } %>
+    <% if(error_msg != ''){ %>
+      <article class="message is-warning is-block mx-6 is-round">
+        <div class="message-header">
+          <%= error_msg %>
+        </div>
+      </article>
+    <% } %>   
+    <% if(error != ''){ %>
+      <article class="message is-warning is-block mx-6 is-round">
+        <div class="message-header">
+          <%= error %>
+        </div>
+      </article>
+    <% } %>
 
     <!-- form login -->
 
@@ -18,11 +40,11 @@
           <div class="container">
             <div class="columns is-centered">
               <div class="column is-5-tablet is-4-desktop is-3-widescreen">
-                <form action="" class="box">
+                <form class="box" method="post">
                   <div class="field">
                     <label for="" class="label">User</label>
                     <div class="control">
-                      <input type="email" placeholder="e.g. bobsmith@gmail.com" class="input">
+                      <input type="text" placeholder="User" name="username" class="input">
                       <span class="icon is-small is-left">
                         <i class="fa fa-envelope"></i>
                       </span>
@@ -31,7 +53,7 @@
                   <div class="field">
                     <label for="" class="label">Password</label>
                     <div class="control">
-                      <input type="password" placeholder="*******" class="input">
+                      <input type="password" placeholder="*******" name="password" class="input">
                       <span class="icon is-small is-left">
                         <i class="fa fa-lock"></i>
                       </span>

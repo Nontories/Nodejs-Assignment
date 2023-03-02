@@ -1,28 +1,50 @@
 const Users = require('../models/Users');
 const bcrypt = require("bcrypt");
+const passport = require('passport');
 
 class UserController {
 
     loginIndex(req, res, next) {
         res.render('login', {
-            title: 'Login page'
+            title: 'Login page',
+            userId : req.session.passport ? req.session.passport.user : ""
         })
     };
 
-    regisIndex(req, res, next) {
-        res.render('register', {
-            title: 'Register page'
-        });
+    login(req, res, next) {
+        passport.authenticate('local', {
+            successRedirect: '/users/dashboard',
+            failureRedirect: '/users/login/',
+            failureFlash: true
+        })(req, res, next);
+    }
+
+    dashboard(req, res, next) {
+        if (req.user.isAdmin){
+            res.render('dashboard', {
+                title: 'Admin page',
+                userId : req.session.passport ? req.session.passport.user : ""
+            })
+        }else {
+            res.redirect('/players')
+        }
+        
     };
 
-    // login(req, res, next) {
-    //     Users.find({"username" : req.body.username}, function(err,user) {
-    //         if(err){
+    logout(req, res, next) {
+        req.logout(function (err) {
+            if (err) { return next(err); }
+            req.flash('success_msg', 'You are logged out');
+            res.redirect('/users/login');
+        });
+    }
 
-    //         }
-    //     })
-
-    // }
+    regisIndex(req, res, next) {
+        res.render('register', {
+            title: 'Register page',
+            userId : req.session.passport ? req.session.passport.user : ""
+        });
+    };
 
     register(req, res, next) {
 
@@ -35,16 +57,16 @@ class UserController {
         if (!user.password) {
             errors.push({ msg: 'Please enter password' });
         }
-        if (!user.name ){
+        if (!user.name) {
             errors.push({ msg: 'Please enter your name' });
         }
-        if (!user.yob){
+        if (!user.yob) {
             errors.push({ msg: 'Please enter your year of birth' });
         }
         if (user.password.length < 6) {
             errors.push({ msg: 'Password must be at least 6 characters' });
         }
-        if (user.password !== user.retypePassword){
+        if (user.password !== user.retypePassword) {
             errors.push({ msg: 'Retype password does not match' });
         }
 
@@ -79,6 +101,13 @@ class UserController {
             });
         }
     }
+
+    locateUserrole(username) {
+        if(username){
+            return Users.findOne({ username })
+        }
+    }
+
 }
 
 // update(req, res, next) {

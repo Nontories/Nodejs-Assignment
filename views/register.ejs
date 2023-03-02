@@ -9,7 +9,7 @@
 </head>
 <body>
 
-    <%-  include('partial/header') %>
+   <%- include('partial/header', {userId : userId}) %>
 
     <% if (typeof errors !== 'undefined') { %>
           <% errors.forEach(function (error){ %> 
