@@ -16,6 +16,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/userRouter');
 const playerRouter = require('./routes/playerRouter');
 const nationRouter = require('./routes/nationRouter');
+
 const app = express();
 
 connect.then((db) => {

@@ -6,83 +6,97 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <title><%= title %></title>
+    <title>
+        <%= title %>
+    </title>
 </head>
 
 <body>
     <%- include('partial/header', {userId : userId}) %>
 
-        <div class="columns">
-            <div class="column">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Club</th>
-                            <th>Position</th>
-                            <th>Goals</th>
-                            <th>Captain</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% players.forEach(function(player){ %>
-                            <tr class="my-2">
-                                <td>
-                                    <figure class="image is-64x64">
-                                        <img src=<%=player.image %> >
-                                    </figure>
-                                </td>
-                                <td>
-                                    <%= player.name %>
-                                </td>
-                                <td>
-                                    <%= player.club %>
-                                </td>
-                                <td>
-                                    <%= player.position %>
-                                </td>
-                                <td>
-                                    <%= player.goals %>
-                                </td>
-                                <td>
-                                    <%= player.isCaptain ? 'Yes' : 'No' %>
-                                </td>
-                                <td>
-                                    <div class="buttons are-small">
-                                        <a href=<%="/players/edit/" + player._id %>><button
-                                                class="button is-warning is-light">Edit</button></a>
-                                        <a href=<%="/players/delete/" + player._id %>><button
-                                                class="button is-danger is-light">Delete</button></a>
-
-                                    </div>
-                                </td>
-                            </tr>
-                            <% })%>
-                    </tbody>
-                </table>
-            </div>
-            <div class="column">
-                <form class="box" method="post">
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Name</label>
+        <div class="columns is-multiline is-mobile is-centered mt-5">
+            <% players.forEach(player=> { %>
+                <div class="column is-2-desktop is-one-fifth-tablet is-12-mobile mx-2" style="flex: 0 0 18%;">
+                    <div class="card is-narrow">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="<%=player.image %>" alt="">
+                            </figure>
                         </div>
-                        <div class="field-body">
-                            <div class="field">
-                                <div class="control">
-                                    <input class="input is-info is-rounded" name="name" type="text" placeholder="e.g. Messi" required>
+                        <div class="card-content">
+                            <div class="media">
+                                <div class="media-left">
+                                    <figure class="image is-48x48">
+                                        <img src="https://bulma.io/images/placeholders/1280x960.png" alt="">
+                                    </figure>
+                                </div>
+                                <div class="media-content">
+                                    <p class="is-6">
+                                        <%= player.name %>
+                                    </p>
                                 </div>
                             </div>
+
+                            <div class="content">
+                                <p> <span class="title is-6">Club : </span>
+                                    <%= player.club %>
+                                </p>
+                            </div>
+                            <div class="content">
+                                <p> <span class="title is-6">Position : </span>
+                                    <%= player.position %>
+                                </p>
+                            </div>
+                            <div class="content">
+                                <p> <span class="title is-6">Goals : </span>
+                                    <%= player.goals %>
+                                </p>
+                            </div>
+                            <div class="content">
+                                <p> <span class="title is-6">Captain : </span>
+                                    <%= player.isCaptain ? 'Yes' : 'No' %>
+                                </p>
+                            </div>
                         </div>
+                        <% if(userId){ %>
+                            <% if(userId.isAdmin){ %>
+                                <footer class="card-footer">
+                                    <a class="card-footer-item button is-warning is-light" href=<%="/players/edit/" + player._id %>>Edit</a>
+                                    <a class="card-footer-item button is-danger is-light" href=<%="/players/delete/" + player._id %>>Delete</a>
+                                </footer>
+                            <% } %>
+                        <% } %>
                     </div>
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Club</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field is-narrow">
+                </div>
+                <% }); %>
+        </div>
+
+        <!-- <% if(userId){ %>
+            <% if(userId.isAdmin){ %>
+                <button class="button is-primary" id="modal-button">Add new player</button>
+            <% } %>
+        <% } %> -->
+
+        <button class="button is-primary m-5 is-pulled-right" id="modal-button">Add new player</button>
+
+        <div class="modal" id="modal">
+            <div class="modal-background"></div>
+            <form class="box" method="post">
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Add Player</p>
+                        <button class="delete modal-cancel-button" aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <form>
+                            <div class="field">
+                                <label class="label">Name</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="Name" name="name">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Club</label>
                                 <div class="control">
                                     <div class="select is-fullwidth is-link is-rounded">
                                         <select name="club">
@@ -95,29 +109,14 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Image</label>
-                        </div>
-                        <div class="field-body">
                             <div class="field">
+                                <label class="label">Image</label>
                                 <div class="control">
-                                    <input class="input is-info is-rounded" name="image" type="text" placeholder="URL of image" required>
+                                    <input class="input" type="text" placeholder="Image URL" name="image">
                                 </div>
-
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Position</label>
-                        </div>
-                        <div class="field-body">
-                            <div class="field is-narrow">
+                            <div class="field">
+                                <label class="label">Position</label>
                                 <div class="control">
                                     <div class="select is-fullwidth is-link is-rounded">
                                         <select name="position">
@@ -129,30 +128,13 @@
                                         </select>
                                     </div>
                                 </div>
-
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Goals</label>
-                        </div>
-                        <div class="field-body">
                             <div class="field">
+                                <label class="label">Goals</label>
                                 <div class="control">
-                                    <input class="input is-info is-rounded" name="goals" type="number" placeholder="goals numbers" required>
+                                    <input class="input" type="number" placeholder="Goals" name="goals">
                                 </div>
-
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-label is-normal">
-                            <label class="label">Captain</label>
-                        </div>
-                        <div class="field-body">
                             <div class="field">
                                 <div class="control">
                                     <input type="radio" value="true" id="captain" name="isCaptain">
@@ -160,26 +142,36 @@
                                     <input type="radio" value="false" id="nonCaptain" name="isCaptain" checked>
                                     <label for="nonCaptain">False</label>
                                 </div>
-
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="field is-horizontal">
-                        <div class="field-body">
-                            <div class="field">
-                                <div class="control">
-                                    <button class="button is-primary" type="submit">
-                                        Create
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                        </form>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button is-success">Save</button>
+                        <button class="button modal-cancel-button">Cancel</button>
+                    </footer>
+                </div>
+            </form>
         </div>
 
+        <script>
+
+            const modalButton = document.getElementById('modal-button');
+            const modal = document.getElementById('modal');
+            const modalCancelButton = document.querySelectorAll('.modal-cancel-button')
+
+            console.log(modalCancelButton);
+
+            modalButton.addEventListener('click', () => {
+                modal.classList.add('is-active');
+            });
+
+            modalCancelButton.forEach(item => {
+                item.addEventListener('click', () => {
+                    modal.classList.remove('is-active');
+                });
+            })
+
+        </script>
 </body>
 
 </html>

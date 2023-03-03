@@ -8,7 +8,7 @@ class nationController {
                 res.render('nations', {
                     title: 'The list of nations',
                     nations: nations,
-                    userId : req.session.passport ? req.session.passport.user : ""
+                    userId : req.user
                 });
             }).catch();
     }
@@ -28,7 +28,7 @@ class nationController {
                 res.render('editNation', {
                     title: 'The detail of Nations',
                     nation: nation,
-                    userId : req.session.passport ? req.session.passport.user : ""
+                    userId : req.user
                 });
             })
             .catch(next);

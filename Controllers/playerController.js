@@ -27,7 +27,7 @@ class playerController {
                     players: players,
                     clubList: clubData,
                     positionList: positionData,
-                    userId : req.session.passport ? req.session.passport.user : ""
+                    userId : req.user
                 });
             }).catch();
     }
@@ -49,7 +49,7 @@ class playerController {
                     player: player,
                     clubList: clubData,
                     positionList: positionData,
-                    userId : req.session.passport ? req.session.passport.user : ""
+                    userId : req.user
                 });
             })
             .catch(next);

@@ -7,7 +7,7 @@ class UserController {
     loginIndex(req, res, next) {
         res.render('login', {
             title: 'Login page',
-            userId : req.session.passport ? req.session.passport.user : ""
+            userId : req.user
         })
     };
 
@@ -23,7 +23,7 @@ class UserController {
         if (req.user.isAdmin){
             res.render('dashboard', {
                 title: 'Admin page',
-                userId : req.session.passport ? req.session.passport.user : ""
+                userId : req.user   
             })
         }else {
             res.redirect('/players')
@@ -42,7 +42,7 @@ class UserController {
     regisIndex(req, res, next) {
         res.render('register', {
             title: 'Register page',
-            userId : req.session.passport ? req.session.passport.user : ""
+            userId : req.user ? req.user.isAdmin : false
         });
     };
 
