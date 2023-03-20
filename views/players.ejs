@@ -26,8 +26,9 @@
                                     <select name="nationFilterValue">
                                         <option value="">Nation</option>
                                         <%for (let nation of nationList){ %>
-                                            <option value="<%= nation.name %>" 
-                                                <%=JSON.stringify(filterList.nationValue)===JSON.stringify(nation.name) ? 'selected' : '' %>>
+                                            <option value="<%= nation.name %>"
+                                                <%=JSON.stringify(filterList.nationValue)===JSON.stringify(nation.name)
+                                                ? 'selected' : '' %>>
                                                 <%= nation.name %>
                                             </option>
                                             <% } %>
@@ -40,7 +41,8 @@
                                         <option value="">Club</option>
                                         <%for (let club of clubList){ %>
                                             <option value="<%= club.name %>"
-                                                <%=JSON.stringify(filterList.clubValue)===JSON.stringify(club.name) ? 'selected' : '' %>>
+                                                <%=JSON.stringify(filterList.clubValue)===JSON.stringify(club.name)
+                                                ? 'selected' : '' %>>
                                                 <%= club.name %>
                                             </option>
                                             <% } %>
@@ -53,7 +55,8 @@
                                         <option value="">Position</option>
                                         <%for (let position of positionList){ %>
                                             <option value="<%= position.name %>"
-                                                <%=JSON.stringify(filterList.positionValue)===JSON.stringify(position.name) ? 'selected' : '' %>>
+                                                <%=JSON.stringify(filterList.positionValue)===JSON.stringify(position.name)
+                                                ? 'selected' : '' %>>
                                                 <%= position.name %>
                                             </option>
                                             <% } %>
@@ -64,10 +67,15 @@
                                 <div class="select">
                                     <select name="goalsFilterValue">
                                         <option value="">Goals</option>
-                                        <option value="0" <%=JSON.stringify(filterList.goalsValue)===JSON.stringify("0") ? 'selected' : '' %>>0 <= Goals >= 3 </option>
-                                        <option value="3" <%=JSON.stringify(filterList.goalsValue)===JSON.stringify("3") ? 'selected' : '' %>>3 < Goals >= 5</option>
-                                        <option value="5" <%=JSON.stringify(filterList.goalsValue)===JSON.stringify("5") ? 'selected' : '' %>>5 < Goals >= 10</option>
-                                        <option value="10" <%=JSON.stringify(filterList.goalsValue)===JSON.stringify("10") ? 'selected' : '' %>>10 < Goals</option>
+                                        <option value="0" <%=JSON.stringify(filterList.goalsValue)===JSON.stringify("0")
+                                            ? 'selected' : '' %>>0 <= Goals>= 3 </option>
+                                        <option value="3" <%=JSON.stringify(filterList.goalsValue)===JSON.stringify("3")
+                                            ? 'selected' : '' %>>3 < Goals>= 5</option>
+                                        <option value="5" <%=JSON.stringify(filterList.goalsValue)===JSON.stringify("5")
+                                            ? 'selected' : '' %>>5 < Goals>= 10</option>
+                                        <option value="10"
+                                            <%=JSON.stringify(filterList.goalsValue)===JSON.stringify("10") ? 'selected'
+                                            : '' %>>10 < Goals</option>
                                     </select>
                                 </div>
                             </div>
@@ -75,8 +83,12 @@
                                 <div class="select">
                                     <select name="isCaptainFilterValue">
                                         <option value="">Captain</option>
-                                        <option value="true" <%=JSON.stringify(filterList.isCaptainValue)===JSON.stringify("true") ? 'selected' : '' %>>Yes</option>
-                                        <option value="false" <%=JSON.stringify(filterList.isCaptainValue)===JSON.stringify("false") ? 'selected' : '' %>>No</option>
+                                        <option value="true"
+                                            <%=JSON.stringify(filterList.isCaptainValue)===JSON.stringify("true")
+                                            ? 'selected' : '' %>>Yes</option>
+                                        <option value="false"
+                                            <%=JSON.stringify(filterList.isCaptainValue)===JSON.stringify("false")
+                                            ? 'selected' : '' %>>No</option>
                                     </select>
                                 </div>
                             </div>
@@ -89,7 +101,7 @@
             </form>
         </div>
 
-        
+
 
         <div class="columns is-multiline is-mobile is-centered mt-5">
             <% players.forEach(player=> { %>
@@ -153,6 +165,7 @@
                 </div>
                 <% }); %>
         </div>
+
 
         <% if(userId){ %>
             <% if(userId.isAdmin){ %>

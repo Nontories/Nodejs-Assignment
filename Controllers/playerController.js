@@ -22,9 +22,9 @@ class playerController {
 
   index(req, res, next) {
 
-    // var currentPage = req.query.page;
-    // var limit = req.query.limit;
-    // var offset = (currentPage - 1) * limit;
+    var currentPage = req.query.page;
+    var limit = req.query.limit;
+    var offset = (currentPage - 1) * limit;
 
 
     let nationList = [];
