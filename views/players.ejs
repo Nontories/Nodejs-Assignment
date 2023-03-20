@@ -105,8 +105,6 @@
             </div>
         </div>
 
-
-
         <div id="content-table" class="columns is-multiline is-mobile is-centered mt-5">
             <% players.forEach(player=> { %>
                 <div class="column is-2-desktop is-one-fifth-tablet is-12-mobile mx-2" style="flex: 0 0 18%;">
@@ -170,6 +168,37 @@
                 <% }); %>
         </div>
 
+        <nav class="pagination" role="navigation" aria-label="pagination">
+            <% if (current > 1) { %>
+              <a href="?page=<%= current - 1 %>" class="pagination-previous">Previous</a>
+            <% } else { %>
+              <a href="#" class="pagination-previous" disabled>Previous</a>
+            <% } %>
+          
+            <% if (current < pages) { %>
+              <a href="?page=<%= current + 1 %>" class="pagination-next">Next</a>
+            <% } else { %>
+              <a href="#" class="pagination-next" disabled>Next</a>
+            <% } %>
+          
+            <ul class="pagination-list is-centered has-text-centered">
+              <% for (let i = 1; i <= pages; i++) { %>
+                <% if (i === current) { %>
+                  <li>
+                    <a href="?page=<%= i %>" class="pagination-link is-current is-vcentered" aria-label="Page <%= i %>" aria-current="page">
+                      <%= i %>
+                    </a>
+                  </li>
+                <% } else { %>
+                  <li>
+                    <a href="?page=<%= i %>" class="pagination-link is-vcentered" aria-label="Goto page <%= i %>">
+                      <%= i %>
+                    </a>
+                  </li>
+                <% } %>
+              <% } %>
+            </ul>
+          </nav>
 
         <% if(userId){ %>
             <% if(userId.isAdmin){ %>
@@ -278,7 +307,6 @@
                             $(document).on("keyup", "#search", function () {
 
                                 var q = $(this).val();
-                                console.log('du lieu nhap tu client: ' + q);
                                 $.ajax({
                                     async: false,
                                     type: 'GET',
@@ -286,7 +314,6 @@
                                     data: { q: q },
                                     dataType: 'html',
                                     success: function (response) {
-                                        console.log(response);
                                         $("#content-table").replaceWith(response);
                                     },
                                     error: function () {

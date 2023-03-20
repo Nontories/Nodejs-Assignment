@@ -1,5 +1,6 @@
 const Players = require('../models/Players');
 const Nations = require('../models/Nations');
+const { populate } = require('../models/Players');
 
 let clubData = [
   { "id": "1", "name": "Arsenal" },
@@ -22,11 +23,6 @@ class playerController {
 
   index(req, res, next) {
 
-    var currentPage = req.query.page;
-    var limit = req.query.limit;
-    var offset = (currentPage - 1) * limit;
-
-
     let nationList = [];
 
     Nations.find({}, function (err, nations) {
@@ -47,24 +43,25 @@ class playerController {
       isCaptainValue: "",
     }
 
-    Players.find({}).populate('nation')
-      .then((players) => {
-        res.render('players', {
-          title: 'The list of Players',
-          filterList: filterList,
-          nationList: nationList,
-          players: players,
-          clubList: clubData,
-          positionList: positionData,
-          userId: req.user,
-          // pagination
-          // pageCount: req.paginate.pageCount,
-          // currentPage: req.paginate.page,
-          // limit: req.paginate.limit,
-          // pages: paginate.getArrayPages(req)(3, req.paginate.pageCount, req.paginate.page)
+    const options = {
+      page: req.query.page || 1,
+      limit: 5,
+      populate: 'nation',
+    };
 
-        });
-      }).catch(next)
+    Players.paginate({}, options).then(function (result) {
+      res.render('players', {
+        title: 'The list of Players',
+        filterList: filterList,
+        nationList: nationList,
+        players: result.docs,
+        clubList: clubData,
+        positionList: positionData,
+        userId: req.user,
+        pages: result.totalPages,
+        current: result.page
+      });
+    }).catch(next)
   }
 
   create = async (req, res, next) => {
@@ -79,7 +76,6 @@ class playerController {
       const isCaptain = req.body.isCaptain;
 
       const playerName = await Players.findOne({ name: name });
-      console.log(playerName);
       if (playerName) {
         res.redirect('/players')
       }
