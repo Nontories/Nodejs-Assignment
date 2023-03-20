@@ -1,12 +1,13 @@
 var express = require('express');
 var playerRouter = express.Router();
+var paginate = require('express-paginate');
 const playerController = require('../Controllers/playerController');
 const auth = require('../config/auth')
 
 /* GET users listing. */
 
 playerRouter.route('/')
-  .get(playerController.index)
+  .get(paginate.middleware(10, 50), playerController.index)
     .post(auth.ensureAuthenticated, auth.isAdmin,playerController.create)
 
 playerRouter.route('/filter')

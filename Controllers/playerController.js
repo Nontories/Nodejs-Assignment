@@ -22,6 +22,11 @@ class playerController {
 
   index(req, res, next) {
 
+    // var currentPage = req.query.page;
+    // var limit = req.query.limit;
+    // var offset = (currentPage - 1) * limit;
+
+
     let nationList = [];
 
     Nations.find({}, function (err, nations) {
@@ -35,23 +40,29 @@ class playerController {
     });
 
     const filterList = {
-      nationValue : "",
-      clubValue : "",
-      positionValue : "",
-      goalsValue : "",
-      isCaptainValue : "",
+      nationValue: "",
+      clubValue: "",
+      positionValue: "",
+      goalsValue: "",
+      isCaptainValue: "",
     }
 
     Players.find({}).populate('nation')
       .then((players) => {
         res.render('players', {
           title: 'The list of Players',
-          filterList : filterList,
+          filterList: filterList,
           nationList: nationList,
           players: players,
           clubList: clubData,
           positionList: positionData,
-          userId: req.user
+          userId: req.user,
+          // pagination
+          // pageCount: req.paginate.pageCount,
+          // currentPage: req.paginate.page,
+          // limit: req.paginate.limit,
+          // pages: paginate.getArrayPages(req)(3, req.paginate.pageCount, req.paginate.page)
+
         });
       }).catch(next)
   }
@@ -59,13 +70,19 @@ class playerController {
   create = async (req, res, next) => {
     try {
       // Tìm nation tương ứng với nationName
-      const nation = await Nations.findOne({ name: req.body.nationValue });
-      const name = req.body.nameValue;
-      const image = req.body.imageValue;
-      const club = req.body.clubValue;
-      const position = req.body.positionValue;
-      const goals = req.body.goalsValue;
-      const isCaptain = req.body.isCaptainValue;
+      const nation = await Nations.findOne({ name: req.body.nation});
+      const name = req.body.name;
+      const image = req.body.image;
+      const club = req.body.club;
+      const position = req.body.position;
+      const goals = req.body.goals;
+      const isCaptain = req.body.isCaptain;
+
+      const playerName = await Players.findOne({ name: name });
+      console.log(playerName);
+      if(playerName){
+        res.redirect('/players')
+      }
 
       // Tạo đối tượng player mới
       const player = new Players({
@@ -75,8 +92,9 @@ class playerController {
         position,
         goals,
         isCaptain,
-        nation: nation.image // Sử dụng ID của nation tìm được ở trên
+        nation: nation ? nation.image : "" // Sử dụng ID của nation tìm được ở trên
       });
+
       await player.save()
         .then(() => res.redirect('/players'))
         .catch(error => {
@@ -152,18 +170,18 @@ class playerController {
 
   filter = async (req, res, next) => {
 
-    let nation = req.body.nationValue;
-    let club = req.body.clubValue;
-    let position = req.body.positionValue;
-    let goals = req.body.goalsValue;
-    let captain = req.body.isCaptainValue;
+    let nation = req.body.nationFilterValue;
+    let club = req.body.clubFilterValue;
+    let position = req.body.positionFilterValue;
+    let goals = req.body.goalsFilterValue;
+    let captain = req.body.isCaptainFilterValue;
 
     const filterList = {
-      nationValue : nation,
-      clubValue : club,
-      positionValue : position,
-      goalsValue : goals,
-      isCaptainValue : captain,
+      nationValue: nation,
+      clubValue: club,
+      positionValue: position,
+      goalsValue: goals,
+      isCaptainValue: captain,
     }
 
     let nationList = [];
@@ -191,41 +209,41 @@ class playerController {
           players = players.filter((element) => {
             goals = Number(goals);
             let goal = element["goals"];
-          if(goals === 0){
+            if (goals === 0) {
 
-            if(goal >= 0 && goal <= 3){
-              return true
+              if (goal >= 0 && goal <= 3) {
+                return true
+              } else {
+                return false
+              }
+
+            } else if (goals === 3) {
+
+              if (goal > 3 && goal <= 5) {
+                return true
+              } else {
+                return false
+              }
+
+            } else if (goals === 5) {
+
+              if (goal > 5 && goal <= 10) {
+                return true
+              } else {
+                return false
+              }
+
+            } else if (goals === 10) {
+
+              if (goal > 10) {
+                return true
+              } else {
+                return false
+              }
+
             } else {
-              return false
-            }
-
-          }else if(goals === 3) {
-
-            if(goal > 3 && goal <= 5){
               return true
-            } else {
-              return false
             }
-
-          }else if(goals === 5) {
-
-            if(goal > 5 && goal <= 10){
-              return true
-            } else {
-              return false
-            }
-            
-          }else if(goals === 10) {
-
-            if(goal > 10 ){
-              return true
-            } else {
-              return false
-            }
-
-          }else{
-            return true
-          }
           });
         }
         if (captain) {

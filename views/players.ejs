@@ -23,7 +23,7 @@
                         <div class="field is-grouped">
                             <div class="control">
                                 <div class="select">
-                                    <select name="nationValue">
+                                    <select name="nationFilterValue">
                                         <option value="">Nation</option>
                                         <%for (let nation of nationList){ %>
                                             <option value="<%= nation.name %>" 
@@ -36,7 +36,7 @@
                             </div>
                             <div class="control">
                                 <div class="select">
-                                    <select name="clubValue">
+                                    <select name="clubFilterValue">
                                         <option value="">Club</option>
                                         <%for (let club of clubList){ %>
                                             <option value="<%= club.name %>"
@@ -49,7 +49,7 @@
                             </div>
                             <div class="control">
                                 <div class="select">
-                                    <select name="positionValue">
+                                    <select name="positionFilterValue">
                                         <option value="">Position</option>
                                         <%for (let position of positionList){ %>
                                             <option value="<%= position.name %>"
@@ -62,7 +62,7 @@
                             </div>
                             <div class="control">
                                 <div class="select">
-                                    <select name="goalsValue">
+                                    <select name="goalsFilterValue">
                                         <option value="">Goals</option>
                                         <option value="0" <%=JSON.stringify(filterList.goalsValue)===JSON.stringify("0") ? 'selected' : '' %>>0 <= Goals >= 3 </option>
                                         <option value="3" <%=JSON.stringify(filterList.goalsValue)===JSON.stringify("3") ? 'selected' : '' %>>3 < Goals >= 5</option>
@@ -73,7 +73,7 @@
                             </div>
                             <div class="control">
                                 <div class="select">
-                                    <select name="isCaptainValue">
+                                    <select name="isCaptainFilterValue">
                                         <option value="">Captain</option>
                                         <option value="true" <%=JSON.stringify(filterList.isCaptainValue)===JSON.stringify("true") ? 'selected' : '' %>>Yes</option>
                                         <option value="false" <%=JSON.stringify(filterList.isCaptainValue)===JSON.stringify("false") ? 'selected' : '' %>>No</option>
@@ -88,6 +88,8 @@
                 </div>
             </form>
         </div>
+
+        
 
         <div class="columns is-multiline is-mobile is-centered mt-5">
             <% players.forEach(player=> { %>
@@ -162,7 +164,7 @@
 
                         <div class="modal" id="modal">
                             <div class="modal-background"></div>
-                            <form class="box" method="post">
+                            <form class="box" method="post" action="/players">
                                 <div class="modal-card">
                                     <header class="modal-card-head">
                                         <p class="modal-card-title">Add Player</p>
