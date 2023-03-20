@@ -16,6 +16,13 @@ class auth  {
         req.flash('error_msg', 'admin path');
         res.redirect('/players');
     }
+
+    checkLogined(req, res, next){
+        if (!req.user) {
+            return next();
+        }
+        res.redirect('/players');
+    }
 }
 
 module.exports = new auth;

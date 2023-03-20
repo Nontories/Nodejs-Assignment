@@ -32,7 +32,7 @@ app.use(
     secret: 'r8q,+&1LM3)CD*zAGpx1xm{NeQhc;#',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 60 * 60 * 1000 }
+    cookie: { maxAge: 24 * 60 * 60 * 1000 }
   })
 );
 

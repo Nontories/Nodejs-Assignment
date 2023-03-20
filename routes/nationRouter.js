@@ -7,13 +7,13 @@ const auth = require('../config/auth')
 
 nationRouter.route('/')
   .get(nationController.index)
-    .post(auth.isAdmin,nationController.create)
+    .post(auth.ensureAuthenticated, auth.isAdmin,nationController.create)
 
 nationRouter.route('/edit/:nationId')
-  .get(auth.isAdmin,nationController.formEdit)
-    .post(auth.isAdmin,nationController.edit)
+  .get(auth.ensureAuthenticated, auth.isAdmin, nationController.formEdit)
+    .post(auth.ensureAuthenticated, auth.isAdmin,nationController.edit)
 
  nationRouter.route('/delete/:nationId')
-    .get(auth.isAdmin,nationController.delete)
+    .get(auth.ensureAuthenticated, auth.isAdmin,nationController.delete)
     
 module.exports = nationRouter;
