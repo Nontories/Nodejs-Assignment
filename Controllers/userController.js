@@ -7,7 +7,7 @@ class UserController {
     loginIndex(req, res, next) {
         res.render('login', {
             title: 'Login page',
-            userId : req.user
+            userId: req.user
         })
     };
 
@@ -20,20 +20,16 @@ class UserController {
     }
 
     dashboard(req, res, next) {
-        if (req.user || req.user.isAdmin){
-            Users.find({})
-                .then((users) => {
-                    res.render('dashboard', {
-                        title: 'Admin page',
-                        userId : req.user,
-                        users : users
-                    })
+        Users.find({})
+            .then((users) => {
+                res.render('dashboard', {
+                    title: 'Admin page',
+                    userId: req.user,
+                    users: users
                 })
-            
-        }else {
-            res.redirect('/players')
-        }
-        
+            })
+
+
     };
 
     logout(req, res, next) {
@@ -47,7 +43,7 @@ class UserController {
     regisIndex(req, res, next) {
         res.render('register', {
             title: 'Register page',
-            userId : req.user ? req.user.isAdmin : false
+            userId: req.user
         });
     };
 
@@ -108,9 +104,9 @@ class UserController {
     }
 
     delete(req, res, next) {
-    Users.findByIdAndDelete({ _id: req.params.userId })
-        .then(() => res.redirect('/users/dashboard'))
-        .catch(next);
+        Users.findByIdAndDelete({ _id: req.params.userId })
+            .then(() => res.redirect('/users/dashboard'))
+            .catch(next);
     }
 
     updateForm(req, res, next) {
@@ -120,10 +116,12 @@ class UserController {
                 res.render('editUser', {
                     title: 'The detail of user',
                     user: user,
-                    userId : req.user
+                    userId: req.user
                 });
             })
-            .catch(next);
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     updateProfile(req, res, next) {
@@ -132,6 +130,77 @@ class UserController {
                 res.redirect(`/users/edit/${req.params.userId}`)
             })
             .catch(next)
+    }
+
+    changePassword(req, res, next) {
+        let newPassword = req.body.newPassword;
+        let retypePassword = req.body.retypePassword;
+        var oldPassword = req.body.oldPassword;
+        var defaultPassword = "";
+        console.log(req.body);
+
+        if (!newPassword || !retypePassword || !oldPassword) {
+            res.render('changePassword', {
+                title: 'Change Password page',
+                message: "Please fill all the field",
+                userId: req.user
+            });
+        }
+
+        Users.findById(req.user._id).then((user) => {
+
+            defaultPassword = user.password;
+
+            const matchPassword = bcrypt.compare(oldPassword, defaultPassword, function (err, result) {
+                if (result) {
+                    return false
+                } else {
+                    return true
+                }
+            });
+
+            if (retypePassword !== newPassword) {
+                res.render('changePassword', {
+                    title: 'Change Password page',
+                    message: "New password do not match",
+                    userId: req.user
+                });
+            } else if (matchPassword) {
+                res.render('changePassword', {
+                    title: 'Change Password page',
+                    message: "Wrong password",
+                    userId: req.user
+                });
+            } else {
+                bcrypt.hash(newPassword, 10, function (err, hash) {
+                    if (err) throw err;
+                    newPassword = hash;
+                    Users.updateOne({ _id: req.user._id },{ $set: { password: newPassword } })
+                        .then(() => {
+                            res.render('changePassword', {
+                                title: 'Change Password page',
+                                message: "change password successful",
+                                userId: req.user
+                            });
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        })
+                });
+
+            }
+
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
+    changePasswordForm(req, res, next) {
+        res.render('changePassword', {
+            title: 'Change Password page',
+            message: '',
+            userId: req.user
+        });
     }
 
 }

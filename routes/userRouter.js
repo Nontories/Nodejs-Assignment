@@ -8,7 +8,7 @@ userRouter.route('/login')
     .post(auth.checkLogined, UserController.login)
 
 userRouter.route('/logout')
-    .get(auth.checkLogined, UserController.logout)
+    .get(UserController.logout)
 
 userRouter.route('/register')
     .get(auth.checkLogined, UserController.regisIndex)
@@ -22,6 +22,12 @@ userRouter.route('/delete/:userId')
 
 userRouter.route('/edit/:userId')
     .get(auth.ensureAuthenticated, auth.isAdmin, UserController.updateForm)
-      .post(auth.ensureAuthenticated, auth.isAdmin, UserController.updateProfile)
+    .post(auth.ensureAuthenticated, auth.isAdmin, UserController.updateProfile)
+
+userRouter.route('/changePassword')
+    .get(auth.ensureAuthenticated, UserController.changePasswordForm)
+    .post(auth.ensureAuthenticated, UserController.changePassword)
+
+
 
 module.exports = userRouter;
