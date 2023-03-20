@@ -12,7 +12,7 @@ userRouter.route('/logout')
 
 userRouter.route('/register')
     .get(auth.checkLogined, UserController.regisIndex)
-    .post(auth.checkLogined, UserController.register)
+    .post(UserController.register)
 
 userRouter.route('/dashboard')
     .get(auth.ensureAuthenticated, auth.isAdmin, UserController.dashboard)
@@ -21,8 +21,8 @@ userRouter.route('/delete/:userId')
     .get(auth.ensureAuthenticated, auth.isAdmin, UserController.delete)
 
 userRouter.route('/edit/:userId')
-    .get(auth.ensureAuthenticated, auth.isAdmin, UserController.updateForm)
-    .post(auth.ensureAuthenticated, auth.isAdmin, UserController.updateProfile)
+    .get(auth.ensureAuthenticated, UserController.updateForm)
+    .post(auth.ensureAuthenticated, UserController.updateProfile)
 
 userRouter.route('/changePassword')
     .get(auth.ensureAuthenticated, UserController.changePasswordForm)

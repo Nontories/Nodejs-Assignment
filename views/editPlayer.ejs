@@ -31,6 +31,28 @@
 
         <div class="field is-horizontal">
             <div class="field-label is-normal">
+                <label class="label">Nation</label>
+            </div>
+            <div class="field-body">
+                <div class="field is-narrow">
+                    <div class="control">
+                        <div class="select is-fullwidth is-link is-rounded">
+                            <select name="nation">
+                                <%for (let nation of nationList){ %>
+                                    <option value="<%= nation.name %>"
+                                        <%=JSON.stringify(nation.image)===JSON.stringify(player.nation) ? 'selected' : '' %>>
+                                        <%= nation.name %>
+                                    </option>
+                                    <% } %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="field is-horizontal">
+            <div class="field-label is-normal">
                 <label class="label">Club</label>
             </div>
             <div class="field-body">

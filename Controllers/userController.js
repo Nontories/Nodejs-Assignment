@@ -74,7 +74,7 @@ class UserController {
         if (errors.length > 0) {
             res.render('register', {
                 errors,
-                user
+                userId : req.user
             });
         }
         else {
@@ -83,7 +83,7 @@ class UserController {
                     errors.push({ msg: 'Username already exists' });
                     res.render('register', {
                         errors,
-                        user
+                        userId : req.user
                     });
                 }
                 else {

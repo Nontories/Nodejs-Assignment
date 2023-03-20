@@ -9,7 +9,9 @@ playerRouter.route('/')
   .get(playerController.index)
     .post(auth.ensureAuthenticated, auth.isAdmin,playerController.create)
 
-// http://localhost:3000/players/edit/id
+playerRouter.route('/filter')
+  .post(playerController.filter)
+
 playerRouter.route('/edit/:playerId')
   .get(auth.ensureAuthenticated, auth.isAdmin,playerController.formEdit)
     .post(auth.ensureAuthenticated, auth.isAdmin,playerController.edit)
