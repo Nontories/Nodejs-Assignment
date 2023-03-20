@@ -70,7 +70,7 @@ class playerController {
   create = async (req, res, next) => {
     try {
       // Tìm nation tương ứng với nationName
-      const nation = await Nations.findOne({ name: req.body.nation});
+      const nation = await Nations.findOne({ name: req.body.nation });
       const name = req.body.name;
       const image = req.body.image;
       const club = req.body.club;
@@ -80,7 +80,7 @@ class playerController {
 
       const playerName = await Players.findOne({ name: name });
       console.log(playerName);
-      if(playerName){
+      if (playerName) {
         res.redirect('/players')
       }
 
@@ -264,6 +264,37 @@ class playerController {
           userId: req.user
         });
       }).catch(next)
+  }
+
+  // ajax
+  async search(req, res, next) {
+    // let payload= req.body.payload.trim();
+    // console.log(payload);
+    // let search = Players.find({name: {}})
+    let q = req.query.q;
+    const mongoQuery = {
+      $or: [
+        { name: { $regex: q || '', $options: 'i' } },
+      ],
+    };
+
+    try {
+      const data = await Players.find({ name: { $regex: q || '', $options: 'i' } });
+      let view = {
+        players: data
+      }
+
+      // res.send(data);
+      res.render('page', view)
+    } catch (error) {
+      console.log(error);
+    }
+
+
+
+    // Players.find({name: {'$regex': new RegExp('^'+ 'a'+ '.*','i')}})
+
+
   }
 };
 module.exports = new playerController;
