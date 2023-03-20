@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const playerSchema = new mongoose.Schema({
         name:{
             type: String,
@@ -24,10 +25,14 @@ const playerSchema = new mongoose.Schema({
         isCaptain:{
             type:Boolean,
             require:true
-        }
+        },
+        nation: {
+            type: String,
+            require:true
+          }
     },
     {
         timestamps: true
     });
-var Players = mongoose.model('Players', playerSchema);
-module.exports = Players;
+module.exports = mongoose.model('Players', playerSchema);
+

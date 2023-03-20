@@ -1,7 +1,7 @@
 var express = require('express');
 var userRouter = express.Router();
 const UserController = require('../Controllers/userController');
-const {ensureAuthenticated} = require('../config/auth')
+const auth = require('../config/auth')
 
 userRouter.route('/login')
     .get(UserController.loginIndex)
@@ -15,6 +15,13 @@ userRouter.route('/register')
     .post(UserController.register)
 
 userRouter.route('/dashboard')
-    .get(ensureAuthenticated, UserController.dashboard)
+    .get(auth.ensureAuthenticated,auth.isAdmin, UserController.dashboard)
+
+userRouter.route('/delete/:userId')
+    .get(auth.isAdmin,UserController.delete)
+
+userRouter.route('/edit/:userId')
+    .get(auth.isAdmin,UserController.updateForm)
+      .post(auth.isAdmin,UserController.updateProfile)
 
 module.exports = userRouter;

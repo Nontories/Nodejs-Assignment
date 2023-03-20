@@ -9,7 +9,39 @@
 </head>
 <body>
     <%- include('partial/header', {userId : userId}) %>
-    <h1>This is admin page</h1> 
-    <a href="/users/logout" class="btn btn-sm btn-label-danger">Log out</a>
+    
+    <div class="columns box">
+        <div class="column">
+            <table class="table m-auto ">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Date of birth</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(user=> { %>
+                        <tr class="my-2">
+                            <td>
+                                <%= user.username %>
+                            </td>
+                            <td>
+                                <%= user.name %>
+                            </td>
+                            <td>
+                                <%= user.yob %>
+                            </td>
+                            <td>
+                                <%= user.isAdmin ? "Admin" : "User" %>
+                            </td>
+                            
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

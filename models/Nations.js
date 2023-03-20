@@ -16,5 +16,4 @@ const nationSchema = new mongoose.Schema({
     {
         timestamps: true
     });
-var Nations = mongoose.model('Nations', nationSchema);
-module.exports = Nations;
+module.exports = mongoose.model('Nations', nationSchema);

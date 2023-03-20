@@ -20,11 +20,16 @@ class UserController {
     }
 
     dashboard(req, res, next) {
-        if (req.user.isAdmin){
-            res.render('dashboard', {
-                title: 'Admin page',
-                userId : req.user   
-            })
+        if (req.user || req.user.isAdmin){
+            Users.find({})
+                .then((users) => {
+                    res.render('dashboard', {
+                        title: 'Admin page',
+                        userId : req.user,
+                        users : users
+                    })
+                })
+            
         }else {
             res.redirect('/players')
         }
@@ -102,27 +107,33 @@ class UserController {
         }
     }
 
-    locateUserrole(username) {
-        if(username){
-            return Users.findOne({ username })
-        }
+    delete(req, res, next) {
+    Users.findByIdAndDelete({ _id: req.params.userId })
+        .then(() => res.redirect('/users/dashboard'))
+        .catch(next);
+    }
+
+    updateForm(req, res, next) {
+        const userId = req.params.userId;
+        Users.findById(userId)
+            .then((user) => {
+                res.render('editUser', {
+                    title: 'The detail of user',
+                    user: user,
+                    userId : req.user
+                });
+            })
+            .catch(next);
+    }
+
+    updateProfile(req, res, next) {
+        Users.updateOne({ _id: req.params.userId }, req.body)
+            .then(() => {
+                res.redirect(`/users/edit/${req.params.userId}`)
+            })
+            .catch(next)
     }
 
 }
-
-// update(req, res, next) {
-//     Users.updateOne({ _id: req.params.userId }, req.body)
-//         .then(() => {
-//             res.redirect('/players')
-//         })
-//         .catch(next)
-// }
-
-// delete(req, res, next) {
-//     Users.findByIdAndDelete({ _id: req.params.playerId })
-//         .then(() => res.redirect('/players'))
-//         .catch(next);
-// }
-
 
 module.exports = new UserController;

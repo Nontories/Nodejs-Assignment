@@ -1,4 +1,5 @@
 const Players = require('../models/Players');
+const Nations = require('../models/Nations');
 
 let clubData = [
     { "id": "1", "name": "Arsenal" },
@@ -20,24 +21,62 @@ let positionData = [
 class playerController {
 
     index(req, res, next) {
-        Players.find({})
+
+        let nationList = [];
+
+        Nations.find({}, function (err, nations) {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            nations.forEach(function (nation) {
+              nationList.push(nation);
+            });
+          });
+
+        Players.find({}).populate('nation')
             .then((players) => {
                 res.render('players', {
                     title: 'The list of Players',
+                    nationList: nationList,
                     players: players,
                     clubList: clubData,
                     positionList: positionData,
                     userId : req.user
                 });
-            }).catch();
+            }).catch(next)
     }
 
-    create(req, res, next) {
-        const players = new Players(req.body);
-        players.save()
+    create = async (req, res, next) => {
+        try {
+          // Tìm nation tương ứng với nationName
+          const nation = await Nations.findOne({ name: req.body.nation });
+          const name = req.body.name;
+          const image = req.body.image;
+          const club = req.body.club;
+          const position = req.body.position;
+          const goals = req.body.goals;
+          const isCaptain = req.body.isCaptain;
+      
+          // Tạo đối tượng player mới
+          const player = new Players({
+            name,
+            image,
+            club,
+            position,
+            goals,
+            isCaptain,
+            nation: nation.image // Sử dụng ID của nation tìm được ở trên
+          });
+          await player.save()
             .then(() => res.redirect('/players'))
-            .catch(error => { });
-    }
+            .catch(error => {
+                console.log(error)
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
     formEdit(req, res, next) {
         const playerId = req.params.playerId;
@@ -53,7 +92,6 @@ class playerController {
                 });
             })
             .catch(next);
-
     }
 
     edit(req, res, next) {
