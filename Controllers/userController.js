@@ -132,11 +132,10 @@ class UserController {
             .catch(next)
     }
 
-    changePassword(req, res, next) {
+    changePassword  (req, res, next) {
         let newPassword = req.body.newPassword;
         let retypePassword = req.body.retypePassword;
         var oldPassword = req.body.oldPassword;
-        var defaultPassword = "";
         console.log(req.body);
 
         if (!newPassword || !retypePassword || !oldPassword) {
@@ -148,47 +147,47 @@ class UserController {
         }
 
         Users.findById(req.user._id).then((user) => {
-
-            defaultPassword = user.password;
-
-            const matchPassword = bcrypt.compare(oldPassword, defaultPassword, function (err, result) {
+            bcrypt.compare(oldPassword, user.password, function (err, result) {
                 if (result) {
-                    return false
+                    if (newPassword.length < 6) {
+                        res.render('changePassword', {
+                            title: 'Change Password page',
+                            message: "Password must be at least 6 characters",
+                            userId: req.user
+                        });
+                    }
+                    if (retypePassword !== newPassword) {
+                        res.render('changePassword', {
+                            title: 'Change Password page',
+                            message: "New password do not match",
+                            userId: req.user
+                        });
+                    } else {
+                        bcrypt.hash(newPassword, 10, function (err, hash) {
+                            if (err) throw err;
+                            newPassword = hash;
+                            Users.updateOne({ _id: req.user._id },{ $set: { password: newPassword } })
+                                .then(() => {
+                                    res.render('changePassword', {
+                                        title: 'Change Password page',
+                                        message: "change password successful",
+                                        userId: req.user
+                                    });
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                })
+                        });
+        
+                    }
                 } else {
-                    return true
+                    res.render('changePassword', {
+                        title: 'Change Password page',
+                        message: "Wrong password",
+                        userId: req.user
+                    })
                 }
             });
-
-            if (retypePassword !== newPassword) {
-                res.render('changePassword', {
-                    title: 'Change Password page',
-                    message: "New password do not match",
-                    userId: req.user
-                });
-            } else if (matchPassword) {
-                res.render('changePassword', {
-                    title: 'Change Password page',
-                    message: "Wrong password",
-                    userId: req.user
-                });
-            } else {
-                bcrypt.hash(newPassword, 10, function (err, hash) {
-                    if (err) throw err;
-                    newPassword = hash;
-                    Users.updateOne({ _id: req.user._id },{ $set: { password: newPassword } })
-                        .then(() => {
-                            res.render('changePassword', {
-                                title: 'Change Password page',
-                                message: "change password successful",
-                                userId: req.user
-                            });
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        })
-                });
-
-            }
 
         }).catch((error) => {
             console.log(error);
