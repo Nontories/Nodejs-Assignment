@@ -1,6 +1,5 @@
 const Players = require('../models/Players');
 const Nations = require('../models/Nations');
-const { populate } = require('../models/Players');
 
 let clubData = [
   { "id": "1", "name": "Arsenal" },
@@ -43,25 +42,31 @@ class playerController {
       isCaptainValue: "",
     }
 
-    const options = {
+    const pagination = {
       page: req.query.page || 1,
-      limit: 5,
-      populate: 'nation',
+      limit: 3,
     };
 
-    Players.paginate({}, options).then(function (result) {
-      res.render('players', {
-        title: 'The list of Players',
-        filterList: filterList,
-        nationList: nationList,
-        players: result.docs,
-        clubList: clubData,
-        positionList: positionData,
-        userId: req.user,
-        pages: result.totalPages,
-        current: result.page
-      });
-    }).catch(next)
+    Players.find({})
+      .populate("nation")
+      .skip(pagination.limit * pagination.page - pagination.limit)
+      .limit(pagination.limit)
+      .then((players) => {
+        Players.countDocuments((err, count) => {
+          res.render('players', {
+            title: 'The list of Players',
+            filterList: filterList,
+            nationList: nationList,
+            players: players,
+            clubList: clubData,
+            positionList: positionData,
+            userId: req.user,
+
+            pages: Math.ceil(count / pagination.limit),
+            current: pagination.page
+          });
+        })
+      }).catch(next)
   }
 
   create = async (req, res, next) => {

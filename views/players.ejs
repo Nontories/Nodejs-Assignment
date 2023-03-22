@@ -14,6 +14,8 @@
 
 <body>
     <%- include('partial/header', {userId : userId}) %>
+
+        <!-- filter -->
         <div class="filter">
             <form method="POST" action="/players/filter">
                 <div class="field is-horizontal">
@@ -168,37 +170,41 @@
                 <% }); %>
         </div>
 
+        <!-- pagination -->
         <nav class="pagination" role="navigation" aria-label="pagination">
-            <% if (current > 1) { %>
-              <a href="?page=<%= current - 1 %>" class="pagination-previous">Previous</a>
-            <% } else { %>
-              <a href="#" class="pagination-previous" disabled>Previous</a>
-            <% } %>
-          
-            <% if (current < pages) { %>
-              <a href="?page=<%= current + 1 %>" class="pagination-next">Next</a>
-            <% } else { %>
-              <a href="#" class="pagination-next" disabled>Next</a>
-            <% } %>
-          
-            <ul class="pagination-list is-centered has-text-centered">
-              <% for (let i = 1; i <= pages; i++) { %>
-                <% if (i === current) { %>
-                  <li>
-                    <a href="?page=<%= i %>" class="pagination-link is-current is-vcentered" aria-label="Page <%= i %>" aria-current="page">
-                      <%= i %>
-                    </a>
-                  </li>
+            <% if (current> 1) { %>
+                <a href="?page=<%= current - 1 %>" class="pagination-previous">Previous</a>
                 <% } else { %>
-                  <li>
-                    <a href="?page=<%= i %>" class="pagination-link is-vcentered" aria-label="Goto page <%= i %>">
-                      <%= i %>
-                    </a>
-                  </li>
-                <% } %>
-              <% } %>
-            </ul>
-          </nav>
+                    <a href="#" class="pagination-previous" disabled>Previous</a>
+                    <% } %>
+
+                        <% if (current < pages) { %>
+                            <a href="?page=<%= current + 1 %>" class="pagination-next">Next</a>
+                            <% } else { %>
+                                <a href="#" class="pagination-next" disabled>Next</a>
+                                <% } %>
+
+                                    <ul class="pagination-list is-centered has-text-centered">
+                                        <% for (let i=1; i <=pages; i++) { %>
+                                            <% if (i===current) { %>
+                                                <li>
+                                                    <a href="?page=<%= i %>"
+                                                        class="pagination-link is-current is-vcentered"
+                                                        aria-label="Page <%= i %>" aria-current="page">
+                                                        <%= i %>
+                                                    </a>
+                                                </li>
+                                                <% } else { %>
+                                                    <li>
+                                                        <a href="?page=<%= i %>" class="pagination-link is-vcentered"
+                                                            aria-label="Goto page <%= i %>">
+                                                            <%= i %>
+                                                        </a>
+                                                    </li>
+                                                    <% } %>
+                                                        <% } %>
+                                    </ul>
+        </nav>
 
         <% if(userId){ %>
             <% if(userId.isAdmin){ %>

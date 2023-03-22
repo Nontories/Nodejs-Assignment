@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const paginate = require('mongoose-paginate-v2');
 
 const playerSchema = new mongoose.Schema({
     name: {
@@ -35,7 +34,5 @@ const playerSchema = new mongoose.Schema({
     {
         timestamps: true
     });
-
-playerSchema.plugin(paginate);
 module.exports = mongoose.model('Players', playerSchema);
 
